@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "tech-radar.fullname" . }}
+  labels:
+    {{- include "tech-radar.labels" . | nindent 4 }}
+data:
+  config.csv: |
+{{ .Values.configCsv | indent 4 }}

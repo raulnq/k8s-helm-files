@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tech-radar.fullname" . }}
+  labels:
+    {{- include "tech-radar.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "tech-radar.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "tech-radar.selectorLabels" . | nindent 8 }}
+    spec:
+      volumes:
+      - name: config-volume
+        configMap:
+          name: {{ include "tech-radar.fullname" . }}  
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+          - name: config-volume
+            mountPath: /opt/build-your-own-radar/files/config.csv
+            subPath: config.csv
+          env:
+            - name: SERVER_NAMES
+              value: localhost 127.0.0.1
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+           limits:
+             cpu: 2000m
+             memory: 1024Mi
+           requests:
+             cpu: 2000m
+             memory: 1024Mi

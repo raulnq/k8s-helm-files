@@ -1,0 +1,7 @@
+replicaCount: 1
+image:
+  repository: wwwthoughtworks/build-your-own-radar
+  pullPolicy: IfNotPresent
+  tag: "latest"
+nameOverride: ""
+fullnameOverride: ""
